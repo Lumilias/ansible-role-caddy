@@ -3,6 +3,7 @@
 {
     log {
         output file /var/log/caddy/caddy.log {
+            mode 0644
             roll_size 1mb
             roll_keep 3
         }
@@ -39,6 +40,7 @@
     log {
         format transform "{common_log}"
         output file /var/log/caddy/{{ wildcard_endpoint.fqdn }}/access.log {
+            mode 0644
             roll_size 1mb
             roll_keep 3
         }
@@ -72,6 +74,7 @@
     log {
         format transform "{common_log}"
         output file /var/log/caddy/{{ endpoint.fqdn }}/access.log {
+            mode 0644
             roll_size 1mb
             roll_keep 3
         }
@@ -84,6 +87,7 @@
     log {
         format transform "{common_log}"
         output file /var/log/caddy/{{ endpoint.fqdn }}/access.log {
+            mode 0644
             roll_size 1mb
             roll_keep 3
         }
