@@ -25,6 +25,10 @@
 {% for wildcard_endpoint in endpoint.wildcard_endpoints %}
     @{{ ( wildcard_endpoint.fqdn | split(".") )[0] }} host {{ wildcard_endpoint.fqdn }}
     handle @{{ ( wildcard_endpoint.fqdn | split(".") )[0] }} {
+    log {
+        format transform "{common_log}"
+        output file /var/log/caddy/{{ wildcard_endpoint.fqdn }}/access.log
+    }
 {% if wildcard_endpoint.tls_insecure | default(false) %}
         reverse_proxy {{ wildcard_endpoint.upstream }} {
             transport http {
@@ -51,11 +55,19 @@
             tls_insecure_skip_verify
         }
     }
+    log {
+        format transform "{common_log}"
+        output file /var/log/caddy/{{ endpoint.upstream }}/access.log
+    }
     import {{ endpoint.tls_provider }}
 }
 {% else %}
 {{ endpoint.fqdn }} {
     reverse_proxy {{ endpoint.upstream }}
+    log {
+        format transform "{common_log}"
+        output file /var/log/caddy/{{ endpoint.upstream }}/access.log
+    }
     import {{ endpoint.tls_provider }}
 }
 {% endif %}
