@@ -1,8 +1,24 @@
 ---
 
-- name: download latest release
+- name: print out hosts architecture
+  gather_facts: true
+  tasks:
+    - debug: var= ansible_facts.architecture
+
+- name: download latest amd64 release
+  when: ansible_facts.architecture == 'x86_64'
   get_url:
     url: "{{ caddy_amd64_linux_binary_url }}"
+    dest: "{{ caddy_binary_path }}"
+    owner: root
+    group: root
+    mode: a+x
+  ignore_errors: true
+  
+- name: download latest arm64 release
+  when: ansible_facts.architecture == 'aarch64'
+  get_url:
+    url: "{{ caddy_arm64_linux_binary_url }}"
     dest: "{{ caddy_binary_path }}"
     owner: root
     group: root
