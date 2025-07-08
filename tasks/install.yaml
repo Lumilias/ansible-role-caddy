@@ -1,11 +1,4 @@
 ---
-- name: Print out hosts architecture
-  hosts: all
-  gather_facts: true
-  tasks:
-  - name: Show architecture
-  - debug: 
-    var: ansible_facts.architecture
 
 - name: download latest amd64 release
   when: ansible_facts.architecture == 'x86_64'
