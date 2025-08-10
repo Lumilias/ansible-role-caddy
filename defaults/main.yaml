@@ -5,3 +5,4 @@ caddy_binary_path: /usr/local/bin/caddy
 caddyfile_path: /etc/caddy
 caddy_user: caddy
 caddy_group: caddy
+caddy_log_path: /var/log/caddy
