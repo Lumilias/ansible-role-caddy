@@ -41,6 +41,14 @@
     group: "{{ caddy_group }}"
     mode: 0755
 
+- name: touch caddy.log
+  ansible.builtin.file:
+    path: "{{ caddy_log_path }}/caddy.log"
+    state: touch
+    owner: "{{ caddy_user }}"
+    group: "{{ caddy_group }}"
+    mode: 0755
+
 - name: restart caddy service
   ansible.builtin.systemd:
     name: caddy
