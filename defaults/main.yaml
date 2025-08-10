@@ -4,5 +4,5 @@ caddy_arm64_linux_binary_url: "https://caddyserver.com/api/download?os=linux&arc
 caddy_binary_path: /usr/local/bin/caddy
 caddyfile_path: /etc/caddy
 caddy_user: caddy
-caddy_group: caddy
+caddy_group: www-data
 caddy_log_path: /var/log/caddy
