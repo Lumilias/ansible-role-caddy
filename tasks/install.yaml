@@ -41,9 +41,9 @@
   file:
     path: "{{ caddy_log_path }}"
     state: directory
-    owner: "{{ caddy_user }}"
+    owner: root
     group: "{{ caddy_group }}"
-    mode: 0644
+    mode: 0755
 
 - name: restart caddy service
   ansible.builtin.systemd:
