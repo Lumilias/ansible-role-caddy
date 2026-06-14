@@ -1,24 +1,43 @@
 ---
 
-- name: download latest amd64 release
-  when: ansible_facts.architecture == 'x86_64'
-  get_url:
-    url: "{{ caddy_amd64_linux_binary_url }}"
-    dest: "{{ caddy_binary_path }}"
+- name: install build dependencies for xcaddy
+  ansible.builtin.package:
+    name: "{{ caddy_build_dependencies[ansible_os_family] | default(caddy_build_dependencies['Default']) }}"
+    state: present
+    update_cache: true
+
+- name: install xcaddy
+  ansible.builtin.command:
+    cmd: go install github.com/caddyserver/xcaddy/cmd/xcaddy@latest
+    creates: "{{ lookup('env', 'HOME') }}/go/bin/xcaddy"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/go/bin:{{ lookup('env', 'HOME') }}/go/bin"
+    GOPATH: "{{ lookup('env', 'HOME') }}/go"
+
+- name: build caddy with required plugins
+  ansible.builtin.command:
+    cmd: >-
+      {{ lookup('env', 'HOME') }}/go/bin/xcaddy build
+      --output {{ caddy_binary_path }}
+      --with github.com/caddy-dns/cloudflare
+      --with github.com/caddyserver/transform-encoder
+      --with github.com/mholt/caddy-ratelimit
+    creates: "{{ caddy_binary_path }}"
+  environment:
+    PATH: "{{ ansible_env.PATH }}:/usr/local/go/bin:{{ lookup('env', 'HOME') }}/go/bin"
+    GOPATH: "{{ lookup('env', 'HOME') }}/go"
+
+- name: ensure caddy binary is executable
+  ansible.builtin.file:
+    path: "{{ caddy_binary_path }}"
+    mode: '0755'
     owner: root
     group: root
-    mode: a+x
-  ignore_errors: true
-  
-- name: download latest arm64 release
-  when: ansible_facts.architecture == 'aarch64'
-  get_url:
-    url: "{{ caddy_arm64_linux_binary_url }}"
-    dest: "{{ caddy_binary_path }}"
-    owner: root
-    group: root
-    mode: a+x
-  ignore_errors: true
+
+- name: Ensure caddy group exists
+  ansible.builtin.group:
+    name: "{{ caddy_group }}"
+    system: true
 
 - name: Add the caddy user
   ansible.builtin.user:

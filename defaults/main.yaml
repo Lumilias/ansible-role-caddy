@@ -1,8 +1,20 @@
 ---
-caddy_amd64_linux_binary_url: "https://caddyserver.com/api/download?os=linux&arch=amd64&p=github.com%2Fcaddy-dns%2Fcloudflare&p=github.com%2Fcaddyserver%2Ftransform-encoder&p=github.com%2Fmholt%2Fcaddy-ratelimit"
-caddy_arm64_linux_binary_url: "https://caddyserver.com/api/download?os=linux&arch=arm64&p=github.com%2Fcaddy-dns%2Fcloudflare&p=github.com%2Fcaddyserver%2Ftransform-encoder&p=github.com%2Fmholt%2Fcaddy-ratelimit"
 caddy_binary_path: /usr/local/bin/caddy
 caddyfile_path: /etc/caddy
 caddy_user: caddy
-caddy_group: www-data
+caddy_group: caddy
 caddy_log_path: /var/log/caddy
+caddy_build_dependencies:
+  Debian:
+    - build-essential
+    - git
+    - golang-go
+  RedHat:
+    - gcc
+    - gcc-c++
+    - git
+    - golang
+  Default:
+    - build-essential
+    - git
+    - golang-go
